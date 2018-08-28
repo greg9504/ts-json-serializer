@@ -80,7 +80,7 @@ export class TsSerializer {
         } else {
             serialized = this.serializeObject(objectOrArray);
         }
-        return JSON.stringify(serialized);
+        return JSON.stringify(serialized, null, 2);
     }
 
     /**
@@ -210,6 +210,15 @@ export class TsSerializer {
             case 'Array':
                 return obj.__value.map(o => this.deserializeObject(o));
             case 'ref':
+                // attempt to do an early dereference now,
+                // as the object may be needed by the parent objects
+                // factory constructor
+                // if (this.references[obj.__value.type] && 
+                //     this.references[obj.__value.type].length > obj.__value.index &&
+                //     this.references[obj.__value.type][obj.__value.index] !== undefined) {
+                //     return this.references[obj.__value.type][obj.__value.index];
+                // }
+
                 return new ReferencedObject(obj.__value);
             default:
                 const type = this.resolver.getType(obj.__type),
@@ -235,8 +244,6 @@ export class TsSerializer {
                     Object.assign(new (type as any).ctor(), transformedObj);
                 
                 this.references[type.name][index] = createdObj;
-
-                
 
                 return createdObj;
         }
