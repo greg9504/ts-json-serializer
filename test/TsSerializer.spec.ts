@@ -467,9 +467,9 @@ describe('TsSerializer', () => {
     describe('deserialize', () => {
 
         it('should deserialize a primitive type', () => {
-            serializer.deserialize('{"__type":"Number","__value":1337}').should.equal(1337);
-            serializer.deserialize('{"__type":"String","__value":"1337"}').should.equal('1337');
-            serializer.deserialize('{"__type":"Boolean","__value":true}').should.equal(true);
+            (serializer.deserialize('{"__type":"Number","__value":1337}') as number).should.equal(1337);
+            (serializer.deserialize('{"__type":"String","__value":"1337"}') as string).should.equal('1337');
+            (serializer.deserialize('{"__type":"Boolean","__value":true}') as boolean).should.equal(true);
         });
 
         it('should deserialize a simple date', () => {
@@ -533,7 +533,7 @@ describe('TsSerializer', () => {
         });
 
         it('should deserialize primitive objects in an array', () => {
-            const deserialized = serializer.deserialize(
+            const deserialized: any = serializer.deserialize(
                 '[{"__type":"Number","__value":1337},{"__type":"String"' +
                 ',"__value":"foobar"},{"__type":"Boolean","__value":true}]'
             );
@@ -663,7 +663,7 @@ describe('TsSerializer', () => {
                 public model: Model;
             }
 
-            const deserialized = serializer.deserialize(
+            const deserialized: any = serializer.deserialize(
                 '[{"__type":"Model","__value":{"name":{"__type":"String","__value":"foobar"}}},' +
                 '{"__type":"OtherModel","__value":{"model":{"__type":"ref","__value":{"type":"Model","index":0}}}}]'
             );
@@ -686,7 +686,7 @@ describe('TsSerializer', () => {
                 public model: Model;
             }
 
-            const deserialized = serializer.deserialize(
+            const deserialized: any = serializer.deserialize(
                 '[{"__type":"OtherModel","__value":{"model":{"__type":"Model","__value":{"name":' +
                 '{"__type":"String","__value":"foobar"}}}}},{"__type":"ref","__value":{"type":"Model","index":0}}]'
             );
@@ -923,7 +923,7 @@ describe('TsSerializer', () => {
 
             const json = serializer.serialize([otherObj, obj]);
 
-            const deserialized = serializer.deserialize(json);
+            const deserialized: any = serializer.deserialize(json);
 
             deserialized[1].should.be.an.instanceof(Model);
             deserialized[1].name.should.equal('foobar');
@@ -950,7 +950,7 @@ describe('TsSerializer', () => {
 
             const json = serializer.serialize([otherObj, obj, obj]);
 
-            const deserialized = serializer.deserialize(json);
+            const deserialized:any = serializer.deserialize(json);
 
             deserialized[1].should.be.an.instanceof(Model);
             deserialized[1].name.should.equal('foobar');
@@ -979,7 +979,7 @@ describe('TsSerializer', () => {
 
             const json = serializer.serialize([obj, otherObj]);
 
-            const deserialized = serializer.deserialize(json);
+            const deserialized: any = serializer.deserialize(json);
 
             deserialized[0].should.be.an.instanceof(Model);
             deserialized[0].name.should.equal('foobar');
@@ -1006,7 +1006,7 @@ describe('TsSerializer', () => {
 
             const json = serializer.serialize([obj, otherObj, obj]);
 
-            const deserialized = serializer.deserialize(json);
+            const deserialized: any = serializer.deserialize(json);
 
             deserialized[0].should.be.an.instanceof(Model);
             deserialized[0].name.should.equal('foobar');
